@@ -4,7 +4,7 @@ const port = 10000;
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const fileUpload = require("express-fileupload");
-const pass = "ArifulIslamRaju000";
+
 app.use(bodyParser.json());
 app.use(cors());
 app.use(express.static("product"));
@@ -30,53 +30,9 @@ client.connect((err) => {
     .collection("clientOrder");
   const AllOrderCollections = client.db("rotiorsCar").collection("allOrder");
   const reviewsCollections = client.db("rotiorsCar").collection("review");
-  // app.post("/addProducts", (req, res) => {
-  //   const file = req.files.file;
-  //   const name = req.body.name;
-  //   const email = req.body.email;
-  //   const newImg = file.data;
-  //   const encImg = newImg.toString("base64");
 
-  //   var image = {
-  //     contentType: file.mimetype,
-  //     size: file.size,
-  //     img: Buffer.from(encImg, "base64"),
-  //   };
-
-  //   ProductsCollection.insertOne({ name, email, image }).then((result) => {
-  //     console.log(result);
-  //     res.send(result.insertedCount > 0);
-  //   });
-  /////////////////////////////////////////////////
-  // const file = req.files.file;
-  // const email = req.body.email;
-  // const name = req.body.name;
-  // console.log(email, name, file);
-  // file.mv(`${__dirname}/product/${file.name}`, (err) => {
-  //   if (err) {
-  //     console.log(err);
-  //     return res.status(500).send({ msg: "failed to uploaded img" });
-  //   }
-  //   //
-  //   ProductsCollection.insertOne({ name, email, img: file.name }).then(
-  //     (result) => {
-  //       res.send(result.insertedCount > 0);
-  //     }
-  //   );
-  //   //
-  //   // return res.send({ name: file.name, path: `/${file.name}` });
-  // });
-  // });
-  ////
-  // app.get("/ourProduct", (req, res) => {
-  //   ProductsCollection.find({}).toArray((err, documents) => {
-  //     res.send(documents);
-  //   });
-  // });
-  ////////////
   app.post("/addEvent", (req, res) => {
     const newEvent = req.body;
-    // console.log("additing new event : ", newEvent);
 
     ProductsCollections.insertOne(newEvent).then((result) => {
       console.log(result.insertedCount);
@@ -147,11 +103,19 @@ client.connect((err) => {
       res.send(doctors.length > 0);
     });
   });
-  //
+  //=====delete===//
+  app.delete("/delete/:id", (req, res) => {
+    odersCollection
+      .deleteOne({ _id: ObjectId(req.params.id) })
+      .then((result) => {
+        console.log(result);
+      });
+    console.log(req.params.id);
+  });
 });
 ////////////////
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-app.listen(port);
+app.listen(process.env.PORT || port);
